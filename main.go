@@ -118,13 +118,27 @@ func EchoERR(mag string) {
 func DoGetFile(inputpath, outpath, filesstr string) string {
 	// 判断要获取的文件或者文件夹是否存在
 	filesarr := strings.Split(filesstr, "\r\n")
+	if len(filesarr) <= 1 {
+		return "请正确输入文件、文件夹名"
+	}
+	arr := []string{}
 	for _, v := range filesarr {
+		if len(v) == 0 {
+			continue
+		}
 		allPath := inputpath + v
 		if !PathExists(allPath) {
 			return "文件或文件夹不存在" + allPath
 		}
+		arr = append(arr, v)
 	}
-	err := WalkPath(inputpath, outpath, filesarr)
+	if len(arr) == 0 {
+		return "请输入正确的文件、文件夹名"
+	}
+	/*
+		if len(arr) <= 1 {
+		}*/
+	err := WalkPath(inputpath, outpath, arr)
 	if err != nil {
 		return "运行时出错，请检查文件、文件夹"
 	}
